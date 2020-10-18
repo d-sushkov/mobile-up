@@ -36,6 +36,9 @@ class MainViewController: UITableViewController {
         noResultsLabel.frame = CGRect(x: 0, y: 0,
                                             width: tableView.bounds.size.width,
                                             height: tableView.bounds.size.height)
+        // updating data is called here to prevent
+        // calling UIAlertControllers by
+        // detached ViewController
         beginUpdatingData()
     }
 
