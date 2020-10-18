@@ -36,7 +36,11 @@ class MessageTableViewCell: UITableViewCell {
                                     placeholderImage: UIImage(systemName: "person.circle"))
         senderNameLabel.text = model.user.nickname
         messageTextLabel.text = model.message.text
-        // Timestamp!
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let date = formatter.date(from: model.message.receivingDate)
+        timestampLabel.text = date?.formatRelativeString()
     }
     
 }

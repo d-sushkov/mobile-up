@@ -10,6 +10,14 @@ import UIKit
 class MainViewController: UITableViewController {
     
     let manager = APIManager()
+    
+    let noResultsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Nothing found"
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +26,19 @@ class MainViewController: UITableViewController {
                            forCellReuseIdentifier: MessageTableViewCell.identifier)
         
         manager.delegate = self
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        noResultsLabel.frame = CGRect(x: 0, y: 0,
+                                    width: tableView.bounds.size.width,
+                                    height: tableView.bounds.size.height)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
         manager.fetchMessageData()
     }
 

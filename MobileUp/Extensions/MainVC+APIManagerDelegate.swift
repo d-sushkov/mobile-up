@@ -14,13 +14,17 @@ extension MainViewController: APIManagerDelegate {
     /// Checks if API call result was not empty
     /// and updates UI with data model
     func managerDidUpdateData() {
-        if manager.result?.count == 0 {
-            // show placeholder
-        } else {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+        manager.result?.count == 0 ? showPlaceholder() : hidePlaceholder()
+        tableView.reloadData()
+//        if manager.result?.count == 0 {
+//            tableView.reloadData()
+//            showPlaceholder()
+//        } else {
+//            DispatchQueue.main.async {
+//                self.hidePlaceholder()
+//                self.tableView.reloadData()
+//            }
+//        }
     }
     
     /// managerDidFailWithError(response: URLResponse?)
@@ -42,6 +46,25 @@ extension MainViewController: APIManagerDelegate {
     /// Presents the alert if internet connection was lost
     func managerDidLoseConnection() {
         showAlert(titleText: "No internet connection", alertMessage: "")
+    }
+    
+    /// showPlaceholder()
+    ///
+    /// Adds placeholder to tableView background
+    private func showPlaceholder() {
+//        noResultsLabel.frame = CGRect(x: 0, y: 0,
+//                                    width: tableView.bounds.size.width,
+//                                    height: tableView.bounds.size.height)
+        tableView.backgroundView = noResultsLabel
+        tableView.separatorStyle = .none
+    }
+    
+    /// hidePlaceholder()
+    ///
+    /// Removes placeholder from tableView background
+    private func hidePlaceholder() {
+        tableView.backgroundView = nil
+        tableView.separatorStyle = .singleLine
     }
     
     /// showAlert(titleText: String, alertMessage: String)
