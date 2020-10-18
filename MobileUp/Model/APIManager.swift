@@ -10,6 +10,7 @@ import Foundation
 protocol APIManagerDelegate: AnyObject {
     func managerDidUpdateData()
     func managerDidFailWithError(response: URLResponse?)
+    func managerDidLoseConnection()
 }
 
 class APIManager {
@@ -22,11 +23,16 @@ class APIManager {
     
     /// fetchMessageData()
     ///
-    /// Creates a URL using given string
+    /// Checks network connection,
+    /// creates a URL using given string
     /// and calls a function to perform request with it
     func fetchMessageData() {
-        if let url = URL(string: apiURLString) {
-            performAPIRequest(with: url)
+        if NetworkMonitor.shared.isConnected {
+            if let url = URL(string: apiURLString) {
+                performAPIRequest(with: url)
+            }
+        } else {
+            delegate?.managerDidLoseConnection()
         }
     }
     

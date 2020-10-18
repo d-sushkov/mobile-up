@@ -6,18 +6,37 @@
 //
 
 import UIKit
+import SDWebImage
 
+/// MessageTableViewCell: UITableViewCell
+///
+/// Custom cell for displaying
+/// Message details in UITableView
 class MessageTableViewCell: UITableViewCell {
+    
+    static let identifier = "MessageTableViewCell"
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+    @IBOutlet weak var avatarImageView: UIImageView!
+    @IBOutlet weak var senderNameLabel: UILabel!
+    @IBOutlet weak var timestampLabel: UILabel!
+    @IBOutlet weak var messageTextLabel: UILabel!
+    
+    static func nib() -> UINib {
+        return UINib(nibName: "MessageTableViewCell", bundle: nil)
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    /// configure(with model: APIModel)
+    ///
+    /// Configures the cell's contents
+    /// with result from API call
+    ///
+    /// Parameters   : model: Data model for configuration
+    func configure(with model: APIModel) {
+        avatarImageView.sd_setImage(with: URL(string: model.user.avatarURL),
+                                    placeholderImage: UIImage(systemName: "person.circle"))
+        senderNameLabel.text = model.user.nickname
+        messageTextLabel.text = model.message.text
+        // Timestamp!
     }
     
 }

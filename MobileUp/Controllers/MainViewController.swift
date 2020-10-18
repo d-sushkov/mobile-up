@@ -14,6 +14,9 @@ class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.register(MessageTableViewCell.nib(),
+                           forCellReuseIdentifier: MessageTableViewCell.identifier)
+        
         manager.delegate = self
         manager.fetchMessageData()
     }
