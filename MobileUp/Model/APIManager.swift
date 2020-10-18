@@ -16,6 +16,7 @@ protocol APIManagerDelegate: AnyObject {
 class APIManager {
     
     weak var delegate: APIManagerDelegate?
+    var progress = Progress(totalUnitCount: 4)
     
     var result: [APIModel]?
     
@@ -27,6 +28,7 @@ class APIManager {
     /// creates a URL using given string
     /// and calls a function to perform request with it
     func fetchMessageData() {
+        progress.completedUnitCount = 1
         if NetworkMonitor.shared.isConnected {
             if let url = URL(string: apiURLString) {
                 performAPIRequest(with: url)
@@ -44,6 +46,7 @@ class APIManager {
     ///
     /// Parameters   : url: URL for API call
     private func performAPIRequest(with url: URL) {
+        progress.completedUnitCount += 1
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: url) {[weak self] (data, response, error) in
             if error != nil {
@@ -51,6 +54,7 @@ class APIManager {
                 print("Error retrieving API data: \(error!.localizedDescription)")
             } else {
                 self?.result = self?.parseJSON(data)
+                self?.progress.completedUnitCount += 1
                 self?.delegate?.managerDidUpdateData()
             }
         }
@@ -65,6 +69,7 @@ class APIManager {
     ///
     /// Return Value : [APIModel]?: decoded data (if succeded) or nil
     private func parseJSON(_ data: Data?) -> [APIModel]? {
+        progress.completedUnitCount += 1
         guard let safeData = data else {return nil}
         let decoder = JSONDecoder()
         do {

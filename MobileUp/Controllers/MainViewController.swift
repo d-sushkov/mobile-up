@@ -9,7 +9,11 @@ import UIKit
 
 class MainViewController: UITableViewController {
     
+    @IBOutlet weak var progressBar: UIProgressView!
+    
     let manager = APIManager()
+    
+    
     
     let noResultsLabel: UILabel = {
         let label = UILabel()
@@ -24,22 +28,29 @@ class MainViewController: UITableViewController {
         
         tableView.register(MessageTableViewCell.nib(),
                            forCellReuseIdentifier: MessageTableViewCell.identifier)
-        
+        progressBar.observedProgress = manager.progress
         manager.delegate = self
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        noResultsLabel.frame = CGRect(x: 0, y: 0,
-                                    width: tableView.bounds.size.width,
-                                    height: tableView.bounds.size.height)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        manager.fetchMessageData()
+        noResultsLabel.frame = CGRect(x: 0, y: 0,
+                                            width: tableView.bounds.size.width,
+                                            height: tableView.bounds.size.height)
+        beginUpdatingData()
     }
 
+    @IBAction func pullToRefresh(_ sender: UIRefreshControl) {
+        beginUpdatingData()
+    }
+    
+    /// beginUpdatingData()
+    ///
+    /// Shows progress bar and starts another data fetching
+    private func beginUpdatingData() {
+        manager.progress.completedUnitCount = 0
+        progressBar.alpha = 1.0
+        manager.fetchMessageData()
+    }
 }

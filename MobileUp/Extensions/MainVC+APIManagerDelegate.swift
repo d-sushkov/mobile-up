@@ -15,16 +15,13 @@ extension MainViewController: APIManagerDelegate {
     /// and updates UI with data model
     func managerDidUpdateData() {
         manager.result?.count == 0 ? showPlaceholder() : hidePlaceholder()
-        tableView.reloadData()
-//        if manager.result?.count == 0 {
-//            tableView.reloadData()
-//            showPlaceholder()
-//        } else {
-//            DispatchQueue.main.async {
-//                self.hidePlaceholder()
-//                self.tableView.reloadData()
-//            }
-//        }
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.tableView.refreshControl?.endRefreshing()
+            UIView.animate(withDuration: 1.5) { () -> Void in
+                self.progressBar.alpha = 0.0
+            }
+        }
     }
     
     /// managerDidFailWithError(response: URLResponse?)
@@ -34,6 +31,7 @@ extension MainViewController: APIManagerDelegate {
     ///
     /// Parameters   : response: API call URL response
     func managerDidFailWithError(response: URLResponse?) {
+        stopUpdatingData()
         var title = "Something went wrong"
         if let httpResponse = response as? HTTPURLResponse, 500...599 ~= httpResponse.statusCode {
             title = "No connection to server"
@@ -45,26 +43,38 @@ extension MainViewController: APIManagerDelegate {
     ///
     /// Presents the alert if internet connection was lost
     func managerDidLoseConnection() {
+        stopUpdatingData()
         showAlert(titleText: "No internet connection", alertMessage: "")
+    }
+    
+    /// stopUpdatingData()
+    ///
+    /// Hides refresh control and progress bar
+    private func stopUpdatingData() {
+        DispatchQueue.main.async {
+            self.refreshControl?.endRefreshing()
+            self.progressBar.alpha = 0.0
+        }
     }
     
     /// showPlaceholder()
     ///
     /// Adds placeholder to tableView background
     private func showPlaceholder() {
-//        noResultsLabel.frame = CGRect(x: 0, y: 0,
-//                                    width: tableView.bounds.size.width,
-//                                    height: tableView.bounds.size.height)
-        tableView.backgroundView = noResultsLabel
-        tableView.separatorStyle = .none
+        DispatchQueue.main.async {
+            self.tableView.backgroundView = self.noResultsLabel
+            self.tableView.separatorStyle = .none
+        }
     }
     
     /// hidePlaceholder()
     ///
     /// Removes placeholder from tableView background
     private func hidePlaceholder() {
-        tableView.backgroundView = nil
-        tableView.separatorStyle = .singleLine
+        DispatchQueue.main.async {
+            self.tableView.backgroundView = nil
+            self.tableView.separatorStyle = .singleLine
+        }
     }
     
     /// showAlert(titleText: String, alertMessage: String)
