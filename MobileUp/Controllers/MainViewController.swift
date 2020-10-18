@@ -12,9 +12,7 @@ class MainViewController: UITableViewController {
     @IBOutlet weak var progressBar: UIProgressView!
     
     let manager = APIManager()
-    
-    
-    
+
     let noResultsLabel: UILabel = {
         let label = UILabel()
         label.text = "Nothing found"

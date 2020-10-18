@@ -15,7 +15,8 @@ import SDWebImage
 class MessageTableViewCell: UITableViewCell {
     
     static let identifier = "MessageTableViewCell"
-
+    var accessoryButton: UIButton?
+    
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var senderNameLabel: UILabel!
     @IBOutlet weak var timestampLabel: UILabel!
@@ -23,6 +24,17 @@ class MessageTableViewCell: UITableViewCell {
     
     static func nib() -> UINib {
         return UINib(nibName: "MessageTableViewCell", bundle: nil)
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        accessoryType = .disclosureIndicator
+        accessoryButton = subviews.compactMap { $0 as? UIButton }.first
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        accessoryButton?.frame.origin.y = 13
     }
     
     /// configure(with model: APIModel)

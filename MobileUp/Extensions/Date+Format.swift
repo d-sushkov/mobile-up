@@ -27,7 +27,6 @@ extension Date {
             dateFormatter.timeStyle = .none
             dateFormatter.dateStyle = .short
         }
-        
         return dateFormatter.string(from: self)
     }
 }

@@ -29,12 +29,14 @@ class APIManager {
     /// and calls a function to perform request with it
     func fetchMessageData() {
         progress.completedUnitCount = 1
-        if NetworkMonitor.shared.isConnected {
-            if let url = URL(string: apiURLString) {
-                performAPIRequest(with: url)
-            }
-        } else {
+        guard NetworkMonitor.shared.isConnected else {
             delegate?.managerDidLoseConnection()
+            return
+        }
+        if let url = URL(string: apiURLString) {
+            performAPIRequest(with: url)
+        } else {
+            delegate?.managerDidFailWithError(response: nil)
         }
     }
     
