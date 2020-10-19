@@ -7,57 +7,56 @@
 
 import Foundation
 
-protocol APIManagerDelegate: AnyObject {
-    func managerDidUpdateData()
-    func managerDidFailWithError(response: URLResponse?)
-    func managerDidLoseConnection()
+struct APICallError: Error {
+    enum ErrorKind {
+        case connectionLost
+        case dataTaskFailed
+        case noDataRetrieved
+    }
+    let kind: ErrorKind
+    let response: URLResponse?
 }
 
 class APIManager {
     
-    weak var delegate: APIManagerDelegate?
     var progress = Progress(totalUnitCount: 4)
     
     var result: [APIModel]?
     
     private let apiURLString = "https://s3-eu-west-1.amazonaws.com/builds.getmobileup.com/storage/MobileUp-Test/api.json"
     
-    /// fetchMessageData()
-    ///
-    /// Checks network connection,
-    /// creates a URL using given string
-    /// and calls a function to perform request with it
-    func fetchMessageData() {
+    func makeAPICall(completion: @escaping ((Result<Data, Error>) -> Void)) {
         progress.completedUnitCount = 1
         guard NetworkMonitor.shared.isConnected else {
-            delegate?.managerDidLoseConnection()
+            let apiCallError = APICallError(kind: .connectionLost, response: nil)
+            DispatchQueue.main.async {
+                completion(.failure(apiCallError))
+            }
             return
         }
-        if let url = URL(string: apiURLString) {
-            performAPIRequest(with: url)
-        } else {
-            delegate?.managerDidFailWithError(response: nil)
-        }
-    }
-    
-    /// performRequest(with url: URL)
-    ///
-    /// Uses given URL to create a URL session data task,
-    /// starts the task and calls a function to parse resulting JSON
-    /// if succeeds
-    ///
-    /// Parameters   : url: URL for API call
-    private func performAPIRequest(with url: URL) {
+        guard let url = URL(string: apiURLString) else {return}
         progress.completedUnitCount += 1
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: url) {[weak self] (data, response, error) in
             if error != nil {
-                self?.delegate?.managerDidFailWithError(response: response)
+                let apiCallError = APICallError(kind: .dataTaskFailed, response: response)
+                DispatchQueue.main.async {
+                    completion(.failure(apiCallError))
+                }
                 print("Error retrieving API data: \(error!.localizedDescription)")
             } else {
                 self?.result = self?.parseJSON(data)
                 self?.progress.completedUnitCount += 1
-                self?.delegate?.managerDidUpdateData()
+                if self?.result != nil {
+                    DispatchQueue.main.async {
+                        completion(.success(data!))
+                    }
+                } else {
+                    let apiCallError = APICallError(kind: .noDataRetrieved, response: nil)
+                    DispatchQueue.main.async {
+                        completion(.failure(apiCallError))
+                    }
+                }
             }
         }
         task.resume()
@@ -81,7 +80,6 @@ class APIManager {
             }
             return decodedData
         } catch {
-            delegate?.managerDidFailWithError(response: nil)
             print("Error decoding data: \(error.localizedDescription)")
             return nil
         }

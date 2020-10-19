@@ -15,7 +15,7 @@ import SDWebImage
 class MessageTableViewCell: UITableViewCell {
     
     static let identifier = "MessageTableViewCell"
-    var accessoryButton: UIButton?
+    private var accessoryButton: UIButton?
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var senderNameLabel: UILabel!
