@@ -9,24 +9,31 @@ import Foundation
 
 extension Date {
     
+    static let formatter = DateFormatter()
+    
     func formatRelativeString() -> String {
-        let dateFormatter = DateFormatter()
         let calendar = Calendar(identifier: .gregorian)
-        dateFormatter.doesRelativeDateFormatting = true
-        
+        Date.formatter.doesRelativeDateFormatting = true
+
         if calendar.isDateInToday(self) {
-            dateFormatter.timeStyle = .short
-            dateFormatter.dateStyle = .none
+            Date.formatter.timeStyle = .short
+            Date.formatter.dateStyle = .none
         } else if calendar.isDateInYesterday(self){
-            dateFormatter.timeStyle = .none
-            dateFormatter.dateStyle = .medium
+            Date.formatter.timeStyle = .none
+            Date.formatter.dateStyle = .medium
         } else if calendar.compare(Date(), to: self, toGranularity: .weekOfYear) == .orderedSame {
             let weekday = calendar.dateComponents([.weekday], from: self).weekday ?? 0
-            return dateFormatter.weekdaySymbols[weekday-1]
+            return Date.formatter.weekdaySymbols[weekday-1]
         } else {
-            dateFormatter.timeStyle = .none
-            dateFormatter.dateStyle = .short
+            Date.formatter.timeStyle = .none
+            Date.formatter.dateStyle = .short
         }
-        return dateFormatter.string(from: self)
+        return Date.formatter.string(from: self)
+    }
+    
+    func convertToDate(string: String) -> String? {
+        Date.formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        let date = Date.formatter.date(from: string)
+        return date?.formatRelativeString()
     }
 }

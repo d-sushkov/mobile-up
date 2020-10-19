@@ -15,7 +15,7 @@ import SDWebImage
 class MessageTableViewCell: UITableViewCell {
     
     static let identifier = "MessageTableViewCell"
-    var accessoryButton: UIButton?
+    private var accessoryButton: UIButton?
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var senderNameLabel: UILabel!
@@ -45,14 +45,10 @@ class MessageTableViewCell: UITableViewCell {
     /// Parameters   : model: Data model for configuration
     func configure(with model: APIModel) {
         avatarImageView.sd_setImage(with: URL(string: model.user.avatarURL),
-                                    placeholderImage: UIImage(systemName: "person.circle"))
+                                    placeholderImage: UIImage(named: "userImage"))
         senderNameLabel.text = model.user.nickname
         messageTextLabel.text = model.message.text
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        let date = formatter.date(from: model.message.receivingDate)
-        timestampLabel.text = date?.formatRelativeString()
+        timestampLabel.text = model.message.shownDate
     }
     
 }
