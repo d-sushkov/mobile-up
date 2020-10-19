@@ -84,8 +84,8 @@ extension MainViewController {
     }
 }
 
-// MARK: - API Manager Delegate Methods
-extension MainViewController {//: APIManagerDelegate {
+// MARK: - UI Updating Methods
+extension MainViewController {
     
     /// managerDidUpdateData()
     ///

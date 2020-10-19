@@ -25,6 +25,11 @@ class APIManager {
     
     private let apiURLString = "https://s3-eu-west-1.amazonaws.com/builds.getmobileup.com/storage/MobileUp-Test/api.json"
     
+    /// makeAPICall(completion: @escaping ((Result<Data, Error>) -> Void))
+    ///
+    /// Creates URL and starts data task
+    ///
+    /// Parameters   : completion: result handling closure
     func makeAPICall(completion: @escaping ((Result<Data, Error>) -> Void)) {
         progress.completedUnitCount = 1
         guard NetworkMonitor.shared.isConnected else {
@@ -43,7 +48,6 @@ class APIManager {
                 DispatchQueue.main.async {
                     completion(.failure(apiCallError))
                 }
-                print("Error retrieving API data: \(error!.localizedDescription)")
             } else {
                 self?.result = self?.parseJSON(data)
                 self?.progress.completedUnitCount += 1
