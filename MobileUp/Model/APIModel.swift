@@ -15,7 +15,7 @@ import Foundation
 /// message API call result
 struct APIModel: Codable {
     let user: User
-    let message: Message
+    var message: Message
 }
 
 struct User: Codable {
@@ -30,8 +30,9 @@ struct User: Codable {
 struct Message: Codable {
     let text: String
     let receivingDate: String
+    var shownDate: String?
     
     private enum CodingKeys: String, CodingKey {
-        case text, receivingDate = "receiving_date"
+        case text, receivingDate = "receiving_date", shownDate
     }
 }

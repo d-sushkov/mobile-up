@@ -75,7 +75,10 @@ class APIManager {
         guard let safeData = data else {return nil}
         let decoder = JSONDecoder()
         do {
-            let decodedData = try decoder.decode([APIModel].self, from: safeData)
+            var decodedData = try decoder.decode([APIModel].self, from: safeData)
+            for i in 0..<decodedData.count {
+                decodedData[i].message.shownDate = Date().convertToDate(string: decodedData[i].message.receivingDate)
+            }
             return decodedData
         } catch {
             delegate?.managerDidFailWithError(response: nil)
