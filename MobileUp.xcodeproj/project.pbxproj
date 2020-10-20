@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BC21159D253F74580022D7CC /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC21159C253F74580022D7CC /* UIViewController+Alert.swift */; };
 		BC7E9687253C97730077B2BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC7E9686253C97730077B2BE /* AppDelegate.swift */; };
 		BC7E9689253C97730077B2BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC7E9688253C97730077B2BE /* SceneDelegate.swift */; };
 		BC7E968E253C97730077B2BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC7E968C253C97730077B2BE /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BC21159C253F74580022D7CC /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		BC7E9683253C97730077B2BE /* MobileUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC7E9686253C97730077B2BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC7E9688253C97730077B2BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				BC7E96C5253CB58E0077B2BE /* Date+Format.swift */,
+				BC21159C253F74580022D7CC /* UIViewController+Alert.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC21159D253F74580022D7CC /* UIViewController+Alert.swift in Sources */,
 				BC7E96AC253C9E400077B2BE /* MessageTableViewCell.swift in Sources */,
 				BC7E96A1253C9D590077B2BE /* APIModel.swift in Sources */,
 				BC7E96A5253C9D7F0077B2BE /* APIManager.swift in Sources */,

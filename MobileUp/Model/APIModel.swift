@@ -7,12 +7,6 @@
 
 import Foundation
 
-/// APIModel: Codable
-/// User: Codable
-/// Message: Codable
-///
-/// Data structures for decoding
-/// message API call result
 struct APIModel: Codable {
     let user: User
     var message: Message

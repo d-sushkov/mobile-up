@@ -24,13 +24,8 @@ class APIManager {
     var result: [APIModel]?
     
     private let apiURLString = "https://s3-eu-west-1.amazonaws.com/builds.getmobileup.com/storage/MobileUp-Test/api.json"
-    
-    /// makeAPICall(completion: @escaping ((Result<Data, Error>) -> Void))
-    ///
-    /// Creates URL and starts data task
-    ///
-    /// Parameters   : completion: result handling closure
-    func makeAPICall(completion: @escaping ((Result<Data, Error>) -> Void)) {
+
+    func getMessages(completion: @escaping ((Result<Data, Error>) -> Void)) {
         progress.completedUnitCount = 1
         guard NetworkMonitor.shared.isConnected else {
             let apiCallError = APICallError(kind: .connectionLost, response: nil)
@@ -65,14 +60,7 @@ class APIManager {
         }
         task.resume()
     }
-    
-    /// parseJSON(_ data: Data?l) -> [APIModel]?
-    ///
-    /// Decodes given data
-    ///
-    /// Parameters   : data: data received from API call
-    ///
-    /// Return Value : [APIModel]?: decoded data (if succeded) or nil
+
     private func parseJSON(_ data: Data?) -> [APIModel]? {
         progress.completedUnitCount += 1
         guard let safeData = data else {return nil}
