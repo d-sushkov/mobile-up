@@ -65,11 +65,9 @@ class APIManager {
         progress.completedUnitCount += 1
         guard let safeData = data else {return nil}
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
         do {
-            var decodedData = try decoder.decode([APIModel].self, from: safeData)
-            for i in 0..<decodedData.count {
-                decodedData[i].message.shownDate = Date().convertToDate(string: decodedData[i].message.receivingDate)
-            }
+            let decodedData = try decoder.decode([APIModel].self, from: safeData)
             return decodedData
         } catch {
             print("Error decoding data: \(error.localizedDescription)")

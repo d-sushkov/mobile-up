@@ -38,7 +38,7 @@ class MessageTableViewCell: UITableViewCell {
                                     placeholderImage: UIImage(named: "userImage"))
         senderNameLabel.text = model.user.nickname
         messageTextLabel.text = model.message.text
-        timestampLabel.text = model.message.shownDate
+        timestampLabel.text = model.message.receivingDate.formatRelativeString()
     }
     
 }

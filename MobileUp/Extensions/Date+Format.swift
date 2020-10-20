@@ -9,11 +9,15 @@ import Foundation
 
 extension Date {
     
-    static let formatter = DateFormatter()
+    static let formatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.doesRelativeDateFormatting = true
+        formatter.locale = Locale(identifier: "ru_RU")
+        return formatter
+    }()
     
     func formatRelativeString() -> String {
         let calendar = Calendar(identifier: .gregorian)
-        Date.formatter.doesRelativeDateFormatting = true
 
         if calendar.isDateInToday(self) {
             Date.formatter.timeStyle = .short
@@ -29,11 +33,5 @@ extension Date {
             Date.formatter.dateStyle = .short
         }
         return Date.formatter.string(from: self)
-    }
-    
-    func convertToDate(string: String) -> String? {
-        Date.formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-        let date = Date.formatter.date(from: string)
-        return date?.formatRelativeString()
     }
 }

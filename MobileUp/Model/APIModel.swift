@@ -23,10 +23,9 @@ struct User: Codable {
 
 struct Message: Codable {
     let text: String
-    let receivingDate: String
-    var shownDate: String?
+    let receivingDate: Date
     
     private enum CodingKeys: String, CodingKey {
-        case text, receivingDate = "receiving_date", shownDate
+        case text, receivingDate = "receiving_date"
     }
 }
