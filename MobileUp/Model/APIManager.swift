@@ -24,13 +24,8 @@ class APIManager {
     var result: [APIModel]?
     
     private let apiURLString = "https://s3-eu-west-1.amazonaws.com/builds.getmobileup.com/storage/MobileUp-Test/api.json"
-    
-    /// makeAPICall(completion: @escaping ((Result<Data, Error>) -> Void))
-    ///
-    /// Creates URL and starts data task
-    ///
-    /// Parameters   : completion: result handling closure
-    func makeAPICall(completion: @escaping ((Result<Data, Error>) -> Void)) {
+
+    func getMessages(completion: @escaping ((Result<Data, Error>) -> Void)) {
         progress.completedUnitCount = 1
         guard NetworkMonitor.shared.isConnected else {
             let apiCallError = APICallError(kind: .connectionLost, response: nil)
@@ -65,23 +60,14 @@ class APIManager {
         }
         task.resume()
     }
-    
-    /// parseJSON(_ data: Data?l) -> [APIModel]?
-    ///
-    /// Decodes given data
-    ///
-    /// Parameters   : data: data received from API call
-    ///
-    /// Return Value : [APIModel]?: decoded data (if succeded) or nil
+
     private func parseJSON(_ data: Data?) -> [APIModel]? {
         progress.completedUnitCount += 1
         guard let safeData = data else {return nil}
         let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
         do {
-            var decodedData = try decoder.decode([APIModel].self, from: safeData)
-            for i in 0..<decodedData.count {
-                decodedData[i].message.shownDate = Date().convertToDate(string: decodedData[i].message.receivingDate)
-            }
+            let decodedData = try decoder.decode([APIModel].self, from: safeData)
             return decodedData
         } catch {
             print("Error decoding data: \(error.localizedDescription)")

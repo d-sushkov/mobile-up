@@ -45,13 +45,10 @@ class MainViewController: UITableViewController {
         beginUpdatingData()
     }
     
-    /// beginUpdatingData()
-    ///
-    /// Shows progress bar and starts (another) data fetching
     private func beginUpdatingData() {
         manager.progress.completedUnitCount = 0
         progressBar.alpha = 1.0
-        manager.makeAPICall { [weak self] result in
+        manager.getMessages { [weak self] result in
             switch result {
             case .failure(let error):
                 self?.didFailAPICall(with: error as! APICallError)
@@ -60,38 +57,8 @@ class MainViewController: UITableViewController {
             }
         }
     }
-}
-
-// MARK: - Table View Methods
-extension MainViewController {
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return manager.result?.count ?? 0
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier) as? MessageTableViewCell else {
-            return UITableViewCell()
-        }
-        if let model = manager.result?[indexPath.row] {
-            cell.configure(with: model)
-        }
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
-    }
-}
-
-// MARK: - UI Updating Methods
-extension MainViewController {
-    
-    /// managerDidUpdateData()
-    ///
-    /// Checks if API call result was not empty
-    /// and updates UI with data model
-    func didUpdateData() {
+    private func didUpdateData() {
         setPlaceholderVisibility()
         tableView.reloadData()
         tableView.refreshControl?.endRefreshing()
@@ -100,7 +67,7 @@ extension MainViewController {
         }
     }
     
-    func didFailAPICall(with error: APICallError) {
+    private func didFailAPICall(with error: APICallError) {
         refreshControl?.endRefreshing()
         progressBar.alpha = 0.0
         switch error.kind {
@@ -126,17 +93,26 @@ extension MainViewController {
             tableView.separatorStyle = .singleLine
         }
     }
+}
+
+// MARK: - Table View Methods
+extension MainViewController {
     
-    /// showAlert(titleText: String, alertMessage: String)
-    ///
-    /// Creates and presents UIAlertController
-    /// with error text
-    ///
-    /// Parameters   : titleText: Alert's title text
-    ///           : alertMessage: Alert's message text
-    private func showAlert(titleText: String, alertMessage: String) {
-        let alert = UIAlertController(title: titleText, message: alertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Close", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return manager.result?.count ?? 0
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier) as? MessageTableViewCell else {
+            return UITableViewCell()
+        }
+        if let model = manager.result?[indexPath.row] {
+            cell.configure(with: model)
+        }
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
     }
 }

@@ -8,10 +8,6 @@
 import UIKit
 import SDWebImage
 
-/// MessageTableViewCell: UITableViewCell
-///
-/// Custom cell for displaying
-/// Message details in UITableView
 class MessageTableViewCell: UITableViewCell {
     
     static let identifier = "MessageTableViewCell"
@@ -36,19 +32,13 @@ class MessageTableViewCell: UITableViewCell {
         super.layoutSubviews()
         accessoryButton?.frame.origin.y = 13
     }
-    
-    /// configure(with model: APIModel)
-    ///
-    /// Configures the cell's contents
-    /// with result from API call
-    ///
-    /// Parameters   : model: Data model for configuration
+
     func configure(with model: APIModel) {
         avatarImageView.sd_setImage(with: URL(string: model.user.avatarURL),
                                     placeholderImage: UIImage(named: "userImage"))
         senderNameLabel.text = model.user.nickname
         messageTextLabel.text = model.message.text
-        timestampLabel.text = model.message.shownDate
+        timestampLabel.text = model.message.receivingDate.formatRelativeString()
     }
     
 }
